@@ -95,9 +95,12 @@ class Migrator {
 
       await this.sync();
       const now = Date.now();
-      const newMigrationFile = `${now}-${migrationName}${this.templateExt}`;
+      const newMigrationFile = `${now}-${migrationName}`;
       mkdirp.sync(this.migrationPath);
-      fs.writeFileSync(path.join(this.migrationPath, newMigrationFile), this.template);
+      fs.writeFileSync(
+        path.join(this.migrationPath, newMigrationFile + this.templateExt),
+        this.template.replace('${FILE}', newMigrationFile)
+      );
       // create instance in db
       await this.connection;
       const migrationCreated = await MigrationModel.create({
